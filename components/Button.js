@@ -11,4 +11,6 @@ const Button = () => {
 
 export default Button
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    
+})

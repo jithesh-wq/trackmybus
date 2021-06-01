@@ -4,7 +4,7 @@ import Login from "./screens/Login"
 import Signup from "./screens/Signup"
 const App = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <Login/>
     </View>
   )
@@ -13,4 +13,8 @@ const App = () => {
 export default App
 
 const styles = StyleSheet.create({
+    container:{
+      backgroundColor:"white",
+      height:"100%"
+    }
 })
