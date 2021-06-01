@@ -1,10 +1,25 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-const Button = () => {
+const Button = (props) => {
     return (
-        <View>
-            <Text>test run</Text>
+        <View style={
+            { width:150,
+            height:50,
+            backgroundColor:props.bgcolor,
+            borderRadius:35,
+            justifyContent:'center',
+            alignItems:'center'
+            }
+            }
+            >
+            <Text style={{
+                color:props.textcolor,
+                fontSize:20,
+                fontWeight:"bold"
+
+
+            }}>{props.text}</Text>
         </View>
     )
 }
@@ -12,5 +27,5 @@ const Button = () => {
 export default Button
 
 const styles = StyleSheet.create({
-    
+  
 })

@@ -1,10 +1,11 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+import Button from '../components/Button'
  
 const Login = () => {
     return (
         <View>
-            <Text>test run</Text>
+           <Button text="Login" bgcolor="#F76C5E" textcolor="white"/>
         </View>
     )
 }
