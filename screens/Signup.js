@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native'
 const Signup = () => {
     return (
         <View>
-            <Text></Text>
+            <Text>test run</Text>
         </View>
     )
 }
