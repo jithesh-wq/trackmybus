@@ -9,7 +9,8 @@ const Button = (props) => {
                 backgroundColor:props.bgcolor,
                 borderRadius:35,
                 justifyContent:'center',
-                alignItems:'center'
+                alignItems:'center',
+                marginTop:20
                  }
                 }
                  activeOpacity={0.7}

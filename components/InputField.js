@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
         // width:"100%"
     },
     inputLabel:{
-        fontSize:18,
+        fontSize:17,
         color:"white",
         marginBottom:5
     },

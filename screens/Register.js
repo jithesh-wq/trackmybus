@@ -1,8 +1,8 @@
 import React from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import {  Image, StyleSheet, Text, View } from 'react-native'
 import Button from '../components/Button'
-import InputField from '../components/InputField'
-const Signup = () => {
+
+const Register = () => {
     return (
         <View style={{flex:1}}>
             <View style={styles.imageContainer} >
@@ -13,21 +13,20 @@ const Signup = () => {
                 <Text style={styles.quote}>Sometimes it's good to miss a bus,{"\n"}it might be a wrong bus</Text>
 
             </View>
-            <View style={styles.inputConatiner}>
-                <InputField label="Username" password={false}/>
-                <InputField label="Password" password={true}/>
-                <Button text="Signup" bgcolor="#F76C5E" textcolor="white"/>
+            <View style={styles.buttonContainer}>
+                <Button text="Login" bgcolor="#F76C5E" textcolor="white"/>
+                <Button text="Signup" bgcolor="white" textcolor="#F76C5E"/>
             </View>
         </View>
     )
 }
 
-export default Signup
+export default Register
 
 const styles = StyleSheet.create({
     imageContainer:{
         width:"100%",
-        height:"60%",
+        height:"80%",
         justifyContent:'center',
         alignItems:'center'
     },
@@ -36,13 +35,14 @@ const styles = StyleSheet.create({
         fontWeight:'bold',
         textAlign:'center'
     },
-    inputConatiner:{
+    buttonContainer:{
         width:"100%",
-        height:"40%",
+        height:"20%",
         backgroundColor:"#39375B",
         borderTopLeftRadius:35,
         borderTopRightRadius:35,
-        justifyContent:'center',
-        alignItems:"center"
+        justifyContent:'space-around',
+        alignItems:"center",
+        flexDirection:'row'
     }
 })
