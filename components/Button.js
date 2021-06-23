@@ -3,17 +3,19 @@ import { StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 're
 
 const Button = (props) => {
     return (
-        <TouchableOpacity style={
-            {
-                width: 140,
-                height: 45,
-                backgroundColor: props.bgcolor,
-                borderRadius: 35,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop: 20
+        <TouchableOpacity
+            onPress={() => { console.log("pressed") }}
+            style={
+                {
+                    width: 140,
+                    height: 45,
+                    backgroundColor: props.bgcolor,
+                    borderRadius: 35,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: 20
+                }
             }
-        }
             activeOpacity={0.7}
         >
             <Text style={{

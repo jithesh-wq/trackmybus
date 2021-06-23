@@ -6,11 +6,10 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 const LocationInput = () => {
   return (
     <GooglePlacesAutocomplete
-      placeholder='Search'
       styles={{
         container: {
           flex: 0,
-          backgroundColor: "blue",
+          // backgroundColor: "blue",
           height: 100,
           alignItems: 'center'
         },
@@ -19,13 +18,16 @@ const LocationInput = () => {
           width: 380
         },
         textInput: {
-          backgroundColor: 'red',
+          backgroundColor: 'white',
           height: 55,
           borderRadius: 35,
           paddingVertical: 5,
           paddingHorizontal: 10,
           fontSize: 15,
           flex: 1,
+          borderColor: 'grey',
+          borderWidth: 1,
+          color: "black",
         },
         poweredContainer: {
           display: "none"

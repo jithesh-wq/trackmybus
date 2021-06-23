@@ -17,6 +17,7 @@ const LocationSelector = () => {
         <Text style={styles.inputLabel}>Destination
         </Text>
         <LocationInput />
+        <Text style={styles.suggestionText}>Select place from the suggestions</Text>
         <Button text="Next" bgcolor="#F76C5E" textcolor="white" />
       </View>
     </View>
@@ -27,16 +28,24 @@ export default LocationSelector
 
 const styles = StyleSheet.create({
   inputContainer: {
-    alignItems: 'center'
+    alignItems: 'center',
   },
   inputLabel: {
     fontSize: 15,
+    fontWeight: 'bold',
+    alignSelf: "flex-start",
+    marginLeft: 20,
+    marginBottom: 10
   },
   logo: {
     alignSelf: 'center',
     width: 100,
     height: 100,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: "red"
+  },
+  suggestionText: {
+    color: "green",
   }
 })
