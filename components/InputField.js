@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     inputBox:{
       height:55,
       width:370,
+      
       paddingLeft:20,
       marginBottom:10,
       borderRadius:35,
