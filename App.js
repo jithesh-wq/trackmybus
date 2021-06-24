@@ -7,11 +7,11 @@ import Register from './screens/Register'
 import Signup from "./screens/Signup"
 import UserPicker from './screens/UserPicker'
 import BusSelector from './screens/BusSelector'
-
+import BusDetails from "./screens/BusDetails"
 const App = () => {
   return (
     <View style={styles.container}>
-      <BusSelector />
+      <BusDetails />
     </View>
   )
 }
