@@ -3,7 +3,10 @@ import { StyleSheet, Text, View,Image } from 'react-native'
 import Button from '../components/Button'
 import InputField from '../components/InputField'
  
-const Login = () => {
+const Login = ({navigation}) => {
+    const handleLogin = () => {
+        navigation.navigate("DriverDetails")
+    }
     return (
         <View style={{flex:1,backgroundColor:"white"}}>
             <View style={styles.imageContainer} >
@@ -17,7 +20,7 @@ const Login = () => {
             <View style={styles.inputConatiner}>
                 <InputField label="Username" password={false}/>
                 <InputField label="Password" password={true}/>
-                <Button text="Login" bgcolor="#F76C5E" textcolor="white"/>
+                <Button text="Login" bgcolor="#F76C5E" textcolor="white" press={handleLogin}/>
             </View>
         </View>
     )

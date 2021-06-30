@@ -5,7 +5,7 @@ const InputField = (props) => {
    
     return (
         <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>{props.label}</Text>
+            <Text style={{color:props.color,fontSize:15,marginBottom:8,marginLeft:20}}>{props.label}</Text>
             <TextInput 
                 style={styles.inputBox}
                 secureTextEntry={props.password}
@@ -17,19 +17,10 @@ const InputField = (props) => {
 export default InputField
 
 const styles = StyleSheet.create({
-    inputContainer:{
-        // width:"100%"
-    },
-    inputLabel:{
-        fontSize:15,
-        color:"white",
-        marginBottom:5,
-        marginLeft:22
-    },
     inputBox:{
       height:55,
       width:370,
-      
+      borderWidth:1,
       paddingLeft:20,
       marginBottom:10,
       borderRadius:35,
