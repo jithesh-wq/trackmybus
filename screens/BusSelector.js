@@ -2,9 +2,9 @@ import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View,Image} from 'react-native'
 import LottieView from 'lottie-react-native';
 
-const BusSelector = () => {
+const BusSelector = ({navigation}) => {
     return (
-        <View>
+        <View style={{flex:1,backgroundColor:"white"}}>
             {/* <TouchableWithoutFeedback onPress={()=>{console.log("backPressed")}}  >
                 <Image
                     style={styles.backButton}
@@ -20,10 +20,10 @@ const BusSelector = () => {
             <TouchableOpacity
                 activeOpacity={0.95}
                 style={styles.listOfBuses}
-                onPress={()=>{console.log("Bus selected")}}>
+                onPress={()=>{navigation.navigate("BusDetails")}}>
                 <View style={styles.busContainer}>
                     <Text style={styles.busTitle}>
-                        Busname1
+                        Teecee
                     </Text>
                     <Image
                     style={styles.backButton}
@@ -37,7 +37,7 @@ const BusSelector = () => {
                 onPress={()=>{console.log("Bus selected")}}>
                 <View style={styles.busContainer}>
                     <Text style={styles.busTitle}>
-                        Busname2
+                        YEM YES
                     </Text>
                     <Image
                     style={styles.backButton}

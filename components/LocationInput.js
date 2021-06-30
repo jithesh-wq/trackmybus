@@ -9,7 +9,6 @@ const LocationInput = () => {
       styles={{
         container: {
           flex: 0,
-          // backgroundColor: "blue",
           height: 100,
           alignItems: 'center'
         },
@@ -55,11 +54,10 @@ const LocationInput = () => {
         }
       }}
       onPress={(data, details = null) => {
-        // 'details' is provided when fetchDetails = true
         console.log(data, details);
       }}
       query={{
-        key: "AIzaSyBi1FPUnzyBEH8QWkLI1hZzCEkeAVvRhJU",
+        key: "AIzaSyApJp32J6Puzjz_JILPDdG2WcQ6gP7fmfw",
         language: 'en',
       }}
     />

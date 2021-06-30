@@ -4,9 +4,12 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import LocationInput from '../components/LocationInput';
 import Button from "../components/Button"
 
-const LocationSelector = () => {
+const LocationSelector =  ({navigation}) => {
+  const nextHandl = ()=>{
+    navigation.navigate('BusSelector')
+  }
   return (
-    <View>
+    <View style={{flex:1,backgroundColor:"white"}}>
       <View style={styles.logo}>
         <Text>TMBus</Text>
       </View>
@@ -18,7 +21,7 @@ const LocationSelector = () => {
         </Text>
         <LocationInput />
         <Text style={styles.suggestionText}>Select place from the suggestions</Text>
-        <Button text="Next" bgcolor="#F76C5E" textcolor="white" />
+        <Button text="Next" bgcolor="#F76C5E" textcolor="white" press={nextHandl} />
       </View>
     </View>
   )

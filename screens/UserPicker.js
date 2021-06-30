@@ -2,10 +2,16 @@ import React, { useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import Button from '../components/Button'
 
-const UserPicker = () => {
+const UserPicker = ({navigation}) => {
     const [selectedValue, setSelectedValue] = useState()
+    const driver=()=>{
+        navigation.navigate('Register')
+    }
+    const passenger=()=>{
+        navigation.navigate('GettingStarted')
+    }
     return (
-        <View style={{flex:1}}>
+        <View style={{flex:1,backgroundColor:"white"}}>
         <View style={styles.imageContainer} >
         
         <Image
@@ -17,8 +23,8 @@ const UserPicker = () => {
         <View style={styles.inputConatiner}>
             <Text style={styles.question}>Who are you..?</Text>
             <View style={styles.optionContainer}>
-                <Button text="Driver" bgcolor="#F76C5E" textcolor="white"/>
-                <Button text="Passenger" bgcolor="white" textcolor="#F76C5E"/>
+                <Button text="Driver" bgcolor="#F76C5E" textcolor="white" press={driver}/>
+                <Button text="Passenger" bgcolor="white" textcolor="#F76C5E" press={passenger}/>
             </View>
         </View>
     </View>

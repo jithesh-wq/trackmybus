@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 're
 const Button = (props) => {
     return (
         <TouchableOpacity
-            onPress={() => { console.log("pressed") }}
+            onPress={props.press}
             style={
                 {
                     width: 140,

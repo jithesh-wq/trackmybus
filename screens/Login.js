@@ -5,7 +5,7 @@ import InputField from '../components/InputField'
  
 const Login = () => {
     return (
-        <View style={{flex:1}}>
+        <View style={{flex:1,backgroundColor:"white"}}>
             <View style={styles.imageContainer} >
             <Image
                 style={styles.image}

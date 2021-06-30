@@ -3,8 +3,11 @@ import { Image, StyleSheet, Text, View } from 'react-native'
 import Button from '../components/Button'
 import InputField from '../components/InputField'
 const Signup = () => {
+    const test =()=>{
+        console.log("signup")
+    }
     return (
-        <View style={{flex:1}}>
+        <View style={{flex:1,backgroundColor:"white"}}>
             <View style={styles.imageContainer} >
             <Image
                 style={styles.image}
@@ -16,7 +19,7 @@ const Signup = () => {
             <View style={styles.inputConatiner}>
                 <InputField label="Username" password={false}/>
                 <InputField label="Password" password={true}/>
-                <Button text="Signup" bgcolor="#F76C5E" textcolor="white"/>
+                <Button text="Signup" bgcolor="#F76C5E" textcolor="white" press={test}/>
             </View>
         </View>
     )

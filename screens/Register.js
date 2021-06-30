@@ -2,9 +2,15 @@ import React from 'react'
 import {  Image, StyleSheet, Text, View } from 'react-native'
 import Button from '../components/Button'
 
-const Register = () => {
+const Register = ({navigation}) => {
+    const handleLogin = ()=>{
+        navigation.navigate("Login")
+    }
+    const handleSignup = ()=>{
+        navigation.navigate("Signup")
+    }
     return (
-        <View style={{flex:1}}>
+        <View style={{flex:1,backgroundColor:"white"}}>
             <View style={styles.imageContainer} >
             <Image
                 style={styles.image}
@@ -14,8 +20,8 @@ const Register = () => {
 
             </View>
             <View style={styles.buttonContainer}>
-                <Button text="Login" bgcolor="#F76C5E" textcolor="white"/>
-                <Button text="Signup" bgcolor="white" textcolor="#F76C5E"/>
+                <Button text="Login" bgcolor="#F76C5E" textcolor="white" press={handleLogin}/>
+                <Button text="Signup" bgcolor="white" textcolor="#F76C5E" press={handleSignup}/>
             </View>
         </View>
     )

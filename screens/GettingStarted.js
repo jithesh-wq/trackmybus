@@ -2,9 +2,12 @@ import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import Button from '../components/Button'
 
-const GettingStarted = () => {
+const GettingStarted = ({navigation}) => {
+    const nextHandler=()=>{
+        navigation.navigate('LocationSelector')
+    }
     return (
-        <View style={{flex:1}}>
+        <View style={{flex:1,backgroundColor:"white"}}>
         <View style={styles.imageContainer} >
         <Image
             style={styles.image}
@@ -17,7 +20,7 @@ const GettingStarted = () => {
             <Text style={styles.text}>
                 Track my bus bus tracking app for easily finding the bus which u want withou wasting time,it helps you to manage time perfectly
             </Text>
-            <Button text="Next" bgcolor="#F76C5E" textcolor="white"/>
+            <Button text="Next" bgcolor="#F76C5E" textcolor="white" press={nextHandler}/>
         </View>
     </View>
     )

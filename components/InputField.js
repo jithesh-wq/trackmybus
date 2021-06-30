@@ -21,9 +21,10 @@ const styles = StyleSheet.create({
         // width:"100%"
     },
     inputLabel:{
-        fontSize:17,
+        fontSize:15,
         color:"white",
-        marginBottom:5
+        marginBottom:5,
+        marginLeft:22
     },
     inputBox:{
       height:55,
