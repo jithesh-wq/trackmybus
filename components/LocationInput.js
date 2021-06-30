@@ -3,7 +3,7 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
-const LocationInput = () => {
+const LocationInput = (props) => {
   return (
     <GooglePlacesAutocomplete
       styles={{
@@ -14,7 +14,8 @@ const LocationInput = () => {
         },
         textInputContainer: {
           flexDirection: 'row',
-          width: 380
+          width: props.width=="small"?340:380,
+          height:55
         },
         textInput: {
           backgroundColor: 'white',

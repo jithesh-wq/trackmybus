@@ -24,7 +24,7 @@ const LocationSelector =  ({navigation}) => {
         <Button text="Next" bgcolor="#F76C5E" textcolor="white" press={nextHandl} />
       </View>
     </View>
-  )
+  ) 
 }
 
 export default LocationSelector

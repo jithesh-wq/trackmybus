@@ -19,8 +19,9 @@ export default InputField
 const styles = StyleSheet.create({
     inputBox:{
       height:55,
-      width:370,
+      width:380,
       borderWidth:1,
+      borderColor:'grey',
       paddingLeft:20,
       marginBottom:10,
       borderRadius:35,

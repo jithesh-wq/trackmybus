@@ -12,7 +12,7 @@ import UserPicker from './screens/UserPicker'
 import BusSelector from './screens/BusSelector'
 import BusDetails from "./screens/BusDetails"
 import DriverDetails from './screens/DriverDetails';
-
+import AddRoutes from './screens/AddRoutes';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -34,7 +34,7 @@ const App = () => {
     //   </Stack.Navigator>
       
     // </NavigationContainer>
-    <DriverDetails/>
+    <AddRoutes/>
   )
 }
 
