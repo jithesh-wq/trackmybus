@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, View,TouchableOpacity } from 'react-native'
 import Button from '../components/Button'
 import InputField from '../components/InputField'
-import OptionSelcetor from '../components/OptionSelcetor'
 const DriverDetails = () => {
     const [option1Selected, setOption1Selected] = useState(false)
     const [option2Selected, setOption2Selected] = useState(false)
@@ -71,8 +70,11 @@ const DriverDetails = () => {
         setOption3Selected(!option3Selected)
       }
     }
+    const handleNext = () =>{
+      console.log("next pressed")
+    }
     return (
-    <View style={{flex:1,backgroundColor:"white"}}>
+    <View style={{flex:1,backgroundColor:"white",alignItems:'center'}}>
       <View style={styles.logo}>
         <Text>TMBus</Text>
       </View>
@@ -92,6 +94,7 @@ const DriverDetails = () => {
             </TouchableOpacity>
         </View>
       </View>
+      <Button text="Next" bgcolor="#F76C5E" textcolor="white" press={handleNext}/>
     </View>
     )
 }
