@@ -18,24 +18,26 @@ const Stack = createStackNavigator();
 
 const App = () => {
   return (
-    // <NavigationContainer>
+    <NavigationContainer>
     
-    // <Stack.Navigator screenOptions={{headerShown: false}}>
-    //     <Stack.Screen
-    //       name="UserPicker"
-    //       component={UserPicker} />
-    //     <Stack.Screen name="GettingStarted" component={GettingStarted}  />
-    //     <Stack.Screen name="LocationSelector" component={LocationSelector}  />
-    //     <Stack.Screen name="BusSelector" component={BusSelector}  />
-    //     <Stack.Screen name="BusDetails" component={BusDetails}  />
-    //     <Stack.Screen name="Register" component={Register}  />
-    //     <Stack.Screen name="Signup" component={Signup}  />
-    //     <Stack.Screen name="Login" component={Login}  />
-    //     <Stack.Screen name="DriverDetails" component={DriverDetails}  />
-    //   </Stack.Navigator>
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen
+          name="UserPicker"
+          component={UserPicker} />
+        <Stack.Screen name="GettingStarted" component={GettingStarted}  />
+        <Stack.Screen name="LocationSelector" component={LocationSelector}  />
+        <Stack.Screen name="BusSelector" component={BusSelector}  />
+        <Stack.Screen name="BusDetails" component={BusDetails}  />
+        <Stack.Screen name="Register" component={Register}  />
+        <Stack.Screen name="Signup" component={Signup}  />
+        <Stack.Screen name="Login" component={Login}  />
+        <Stack.Screen name="DriverDetails" component={DriverDetails}  />
+        <Stack.Screen name="AddRoutes" component={AddRoutes}  />
+        <Stack.Screen name="BusStatus" component={BusStatus}  />
+      </Stack.Navigator>
       
-    // </NavigationContainer>
-    <BusStatus/>
+    </NavigationContainer>
+
   )
 }
 
