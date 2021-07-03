@@ -18,8 +18,8 @@ const Login = ({navigation}) => {
 
             </View>
             <View style={styles.inputConatiner}>
-                <InputField label="Username" password={false}/>
-                <InputField label="Password" password={true}/>
+                <InputField label="Username" password={false} color="white"/>
+                <InputField label="Password" password={true} color="white"/>
                 <Button text="Login" bgcolor="#F76C5E" textcolor="white" press={handleLogin}/>
             </View>
         </View>

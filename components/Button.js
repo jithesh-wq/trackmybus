@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text,  TouchableOpacity } from 'react-native'
 
 const Button = (props) => {
     return (
@@ -13,7 +13,9 @@ const Button = (props) => {
                     borderRadius: 35,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    marginTop: 20
+                    marginTop: 20,
+                    elevation:5
+
                 }
             }
             activeOpacity={0.7}

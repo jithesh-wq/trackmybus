@@ -3,12 +3,12 @@ import { StyleSheet, Text, ScrollView,View, TouchableOpacity, BackHandler } from
 import InputField from '../components/InputField'
 import LocationInput from '../components/LocationInput'
 import Button from '../components/Button'
-const AddRoutes = () => {
+const AddRoutes = ({navigation}) => {
     const addStop = ()=>{
         console.log("Added stop")
     }
     const saveRoute = ()=>{
-        console.log("Added stop")
+       navigation.navigate('BusStatus')
     }
     
     return (

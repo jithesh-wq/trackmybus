@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, View,TouchableOpacity } from 'react-native'
 import Button from '../components/Button'
 import InputField from '../components/InputField'
-const DriverDetails = () => {
+const DriverDetails = ({navigation}) => {
     const [option1Selected, setOption1Selected] = useState(false)
     const [option2Selected, setOption2Selected] = useState(false)
     const [option3Selected, setOption3Selected] = useState(false)
@@ -71,7 +71,7 @@ const DriverDetails = () => {
       }
     }
     const handleNext = () =>{
-      console.log("next pressed")
+      navigation.navigate("AddRoutes")
     }
     return (
     <View style={{flex:1,backgroundColor:"white",alignItems:'center'}}>
