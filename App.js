@@ -20,6 +20,8 @@ const Stack = createStackNavigator();
 const App = () => {
   const [userMode, setUserMode] = useState("notSet");
   const [state, setstate] = useState("");
+  const [firstTimeUser, setfirstTimeUser] = useState(true)
+  const [user, setUser] = useState(null);
   useEffect(() => {
     const getData = async () => {
       try {
@@ -46,26 +48,53 @@ const App = () => {
     <NavigationContainer>
     <Stack.Navigator screenOptions={{headerShown: false}}>
     {userMode==="notSet"?(
-        <Stack.Screen
-          name="UserPicker"
-          component={UserPicker} />
+      <>
+          <Stack.Screen name="UserPicker" component={UserPicker} />
+          <Stack.Screen name="GettingStarted" component={GettingStarted}  />
+          <Stack.Screen name="LocationSelector" component={LocationSelector}  />
+          <Stack.Screen name="BusSelector" component={BusSelector}  />
+          <Stack.Screen name="BusDetails" component={BusDetails}  />
+          <Stack.Screen name="Register" component={Register}  />
+          <Stack.Screen name="Signup" component={Signup}  />
+          <Stack.Screen name="Login" component={Login}  />
+          <Stack.Screen name="DriverDetails" component={DriverDetails}  />
+          <Stack.Screen name="AddRoutes" component={AddRoutes}  />
+          <Stack.Screen name="BusStatus" component={BusStatus}  />
+        </>
     ):(
       userMode==="passenger"?(
-        <>
-        <Stack.Screen name="GettingStarted" component={GettingStarted}  />
-        <Stack.Screen name="LocationSelector" component={LocationSelector}  />
-        <Stack.Screen name="BusSelector" component={BusSelector}  />
-        <Stack.Screen name="BusDetails" component={BusDetails}  />
-        </>
+        firstTimeUser?(
+          <>
+            <Stack.Screen name="GettingStarted" component={GettingStarted}  />
+            <Stack.Screen name="LocationSelector" component={LocationSelector}  />
+            <Stack.Screen name="BusSelector" component={BusSelector}  />
+            <Stack.Screen name="BusDetails" component={BusDetails}  />
+          </>
+        ):(
+          <>
+            <Stack.Screen name="LocationSelector" component={LocationSelector}  />
+            <Stack.Screen name="BusSelector" component={BusSelector}  />
+            <Stack.Screen name="BusDetails" component={BusDetails}  />
+          </>
+        )
       ):(
-      <>
-        <Stack.Screen name="Register" component={Register}  />
-        <Stack.Screen name="Signup" component={Signup}  />
-        <Stack.Screen name="Login" component={Login}  />
-        <Stack.Screen name="DriverDetails" component={DriverDetails}  />
-        <Stack.Screen name="AddRoutes" component={AddRoutes}  />
-        <Stack.Screen name="BusStatus" component={BusStatus}  />
-      </>
+        user!==null?(
+          <>
+            <Stack.Screen name="DriverDetails" component={DriverDetails}  />
+            <Stack.Screen name="AddRoutes" component={AddRoutes}  />
+            <Stack.Screen name="BusStatus" component={BusStatus}  />
+          </>
+        ):(
+          <>
+            <Stack.Screen name="Register" component={Register}  />
+            <Stack.Screen name="Signup" component={Signup}  />
+            <Stack.Screen name="Login" component={Login}  />
+            <Stack.Screen name="DriverDetails" component={DriverDetails}  />
+            <Stack.Screen name="AddRoutes" component={AddRoutes}  />
+            <Stack.Screen name="BusStatus" component={BusStatus}  />
+          </>
+        )
+      
       )
     )}
       </Stack.Navigator>  

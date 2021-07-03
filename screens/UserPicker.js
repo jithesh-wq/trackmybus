@@ -1,13 +1,23 @@
 import React, { useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import Button from '../components/Button'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const UserPicker = ({navigation}) => {
     const [selectedValue, setSelectedValue] = useState()
-    const driver=()=>{
+    const driver=async()=>{
+        try{
+            await AsyncStorage.setItem('userMode', "driver")
+        }catch(e){
+            console.log(e);
+        }
         navigation.navigate('Register')
     }
-    const passenger=()=>{
+    const passenger=async()=>{
+        try{
+            await AsyncStorage.setItem('userMode', "passenger")
+        }catch(e){
+            console.log(e);
+        }
         navigation.navigate('GettingStarted')
     }
     return (
