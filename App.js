@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View,ActivityIndicator } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import GettingStarted from './screens/GettingStarted'
@@ -15,6 +15,7 @@ import DriverDetails from './screens/DriverDetails';
 import AddRoutes from './screens/AddRoutes';
 import BusStatus from './screens/BusStatus';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoadingScreen from './screens/LoadingScreen';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -22,13 +23,21 @@ const App = () => {
   const [state, setstate] = useState("");
   const [firstTimeUser, setfirstTimeUser] = useState(true)
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
     const getData = async () => {
       try {
-        const value = await AsyncStorage.getItem('userMode')
-        if(value !== null) {
-          if(value === "passenger"){
+        const userType = await AsyncStorage.getItem('userMode')
+        const value = await AsyncStorage.getItem('isFirstTime')
+        if(userType !== null) {
+          if(userType === "passenger"){
             setUserMode("passenger")
+            if(value==="no"){
+              setfirstTimeUser(false)
+            }
+            else{
+              setfirstTimeUser(true)
+            }
           }else{
             setUserMode("driver")
           }
@@ -38,12 +47,15 @@ const App = () => {
       } catch(e) {
         console.log(e);
       }
+      setIsLoading(false)
     }
-    
-      getData()
-   
+    getData()
   }, []);
-  
+  if(isLoading){
+    return(
+      <LoadingScreen/>
+    )
+  }
   return (
     <NavigationContainer>
     <Stack.Navigator screenOptions={{headerShown: false}}>

@@ -1,9 +1,14 @@
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import Button from '../components/Button'
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 const GettingStarted = ({navigation}) => {
-    const nextHandler=()=>{
+    const nextHandler=async()=>{
+        try{
+            await AsyncStorage.setItem("isFirstTime","no")
+        }catch(e){
+            console.log(e);
+        }
         navigation.navigate('LocationSelector')
     }
     return (

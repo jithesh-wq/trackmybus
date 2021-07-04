@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View,Image } from 'react-native'
 import Button from '../components/Button'
 import InputField from '../components/InputField'
+import AsyncStorage from '@react-native-async-storage/async-storage';
  
 const Login = ({navigation}) => {
     const handleLogin = () => {
