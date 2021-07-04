@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View,TouchableOpacity } from 'react-native'
 import Button from '../components/Button'
 import InputField from '../components/InputField'

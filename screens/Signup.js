@@ -1,10 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import Button from '../components/Button'
 import InputField from '../components/InputField'
-const Signup = () => {
+import auth from '@react-native-firebase/auth';
+
+const Signup = ({navigation}) => {
+    const [userName, setUserName] = useState()
+    const [password, setPassword] = useState()
     const test =()=>{
         console.log("signup")
+            auth()
+            .createUserWithEmailAndPassword(userName, password)
+            .then(() => {
+                 console.log('User account created & signed in!');
+                navigation.navigate("DriverDetails")
+            })
+              .catch(error => {
+                if (error.code === 'auth/email-already-in-use') {
+                    console.log('That email address is already in use!');
+                }     
+                if (error.code === 'auth/invalid-email') {
+                    console.log('That email address is invalid!');
+                }
+
+                console.error(error);
+                });
+            }
+    const getUserName = (value) => {
+    //   console.log(value)
+      setUserName(value)
+    }
+    const getPassword = (value) => {
+    //   console.log(value)
+      setPassword(value)
     }
     return (
         <View style={{flex:1,backgroundColor:"white"}}>
@@ -17,8 +45,8 @@ const Signup = () => {
 
             </View>
             <View style={styles.inputConatiner}>
-                <InputField label="Username" password={false}/>
-                <InputField label="Password" password={true}/>
+                <InputField label="Username" password={false} color="white" getText={(value)=>getUserName(value)}/>
+                <InputField label="Password" password={true} color="white" getText={(value)=>getPassword(value)}/>
                 <Button text="Signup" bgcolor="#F76C5E" textcolor="white" press={test}/>
             </View>
         </View>
