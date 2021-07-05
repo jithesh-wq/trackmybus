@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View,TouchableOpacity } from 'react-native'
 import Button from '../components/Button'
 import InputField from '../components/InputField'
+import firestore from '@react-native-firebase/firestore';
 const DriverDetails = ({navigation}) => {
     const [option1Selected, setOption1Selected] = useState(false)
     const [option2Selected, setOption2Selected] = useState(false)
     const [option3Selected, setOption3Selected] = useState(false)
+    const [user, setUser] = useState()
     const option1SelectorStyle = {
       width:80,
       height:40,
@@ -73,6 +75,11 @@ const DriverDetails = ({navigation}) => {
     const handleNext = () =>{
       navigation.navigate("AddRoutes")
     }
+    //firebasse functions
+    useEffect(() => {
+      
+    }, [input])
+    const busCollection = firestore().collection('Buses').doc('ABC');
     return (
     <View style={{flex:1,backgroundColor:"white",alignItems:'center'}}>
       <View style={styles.logo}>
