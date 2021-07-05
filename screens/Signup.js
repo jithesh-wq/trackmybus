@@ -7,9 +7,10 @@ import auth from '@react-native-firebase/auth';
 const Signup = ({navigation}) => {
     const [userName, setUserName] = useState()
     const [password, setPassword] = useState()
-    const test =()=>{
+    const handleSignup =()=>{
         console.log("signup")
-            auth()
+        if(userName && password){
+          auth()
             .createUserWithEmailAndPassword(userName, password)
             .then(() => {
                  console.log('User account created & signed in!');
@@ -24,7 +25,10 @@ const Signup = ({navigation}) => {
                 }
 
                 console.error(error);
-                });
+          });
+        }else{
+            console.log("Empty Field");
+        }
             }
     const getUserName = (value) => {
     //   console.log(value)
@@ -47,7 +51,7 @@ const Signup = ({navigation}) => {
             <View style={styles.inputConatiner}>
                 <InputField label="Username" password={false} color="white" getText={(value)=>getUserName(value)}/>
                 <InputField label="Password" password={true} color="white" getText={(value)=>getPassword(value)}/>
-                <Button text="Signup" bgcolor="#F76C5E" textcolor="white" press={test}/>
+                <Button text="Signup" bgcolor="#F76C5E" textcolor="white" press={handleSignup}/>
             </View>
         </View>
     )

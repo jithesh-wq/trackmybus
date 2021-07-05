@@ -17,7 +17,8 @@ const Login = ({navigation}) => {
         }
         const handleLogin = () => {
             setIsLoading(true)
-            auth()
+            if(userName && password){
+                auth()
                 .signInWithEmailAndPassword(userName, password)
                 .then(() => {
                     console.log('Logged in!');
@@ -35,6 +36,10 @@ const Login = ({navigation}) => {
                     }
                         console.error(error);
             });
+            }else{
+                console.log("Empty Fields");
+            }
+           
             setIsLoading(false)
         }
         useEffect(() => {

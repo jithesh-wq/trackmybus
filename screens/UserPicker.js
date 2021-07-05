@@ -1,15 +1,31 @@
 import React, { useState } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, View,PermissionsAndroid,Alert } from 'react-native'
 import Button from '../components/Button'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const UserPicker = ({navigation}) => {
     const [selectedValue, setSelectedValue] = useState()
+    const getLocationPermission = async() => {
+        try {
+            const granted = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+            )
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+              console.log("You can use the location")
+            } else {
+              alert("App Only Works if Location Permission is granted")
+              getLocationPermission()
+            }
+          } catch (err) {
+            console.warn(err)
+          }
+    }
     const driver=async()=>{
         try{
             await AsyncStorage.setItem('userMode', "driver")
         }catch(e){
             console.log(e);
         }
+        getLocationPermission()
         navigation.navigate('Register')
     }
     const passenger=async()=>{
