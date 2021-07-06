@@ -3,11 +3,17 @@ import { StyleSheet, Text, View,TouchableOpacity } from 'react-native'
 import Button from '../components/Button'
 import InputField from '../components/InputField'
 import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth'
+import LoadingScreen from './LoadingScreen';
 const DriverDetails = ({navigation}) => {
     const [option1Selected, setOption1Selected] = useState(false)
     const [option2Selected, setOption2Selected] = useState(false)
     const [option3Selected, setOption3Selected] = useState(false)
-    const [user, setUser] = useState()
+    const [serviceMode, setServiceMode] = useState(null)
+    const [userId, setUserId] = useState(null)
+    const [userName, setUserName] = useState("")
+    const [busName, setBusName] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
     const option1SelectorStyle = {
       width:80,
       height:40,
@@ -38,12 +44,18 @@ const DriverDetails = ({navigation}) => {
         if(option2Selected){
           setOption2Selected(false)
           setOption1Selected(true)
+          
         }else{
           setOption3Selected(false)
           setOption1Selected(true)
         }
       }else{
         setOption1Selected(!option1Selected)
+      }
+      if(!option1Selected){
+        setServiceMode("LS")
+      }else{
+        setServiceMode(null)
       }
     }
     const handleOption2Selection = ()=>{
@@ -58,6 +70,11 @@ const DriverDetails = ({navigation}) => {
       }else{
         setOption2Selected(!option2Selected)
       }
+      if(!option2Selected){
+        setServiceMode("TT")
+      }else{
+        setServiceMode(null)
+      }
     }
     const handleOption3Selection = ()=>{
       if(option2Selected || option1Selected){
@@ -71,23 +88,71 @@ const DriverDetails = ({navigation}) => {
       }else{
         setOption3Selected(!option3Selected)
       }
+      if(!option3Selected){
+        setServiceMode("FP")
+      }else{
+        setServiceMode(null)
+      }
     }
     const handleNext = () =>{
-      navigation.navigate("AddRoutes")
+      if(serviceMode!=null && userId!=null && userName!="" && busName!=""){
+        setIsLoading(true)
+        firestore()
+          .collection('Buses')
+          .doc(userId)
+          .set({
+            userName: userName,
+            busNAme:busName,
+            serviceMode:serviceMode,
+            currentStatus:'Not Running',
+            isBreackDown:false,
+            isInTraffic:false,
+            isRouteCancelled:false
+          })
+          .then(() => {
+            console.log('Data Added!');
+            setUserName(null)
+            setBusName(null)
+            setServiceMode(null)
+            setOption1Selected(false)
+            setOption2Selected(false)
+            setOption3Selected(false)
+            setIsLoading(false)
+            navigation.navigate("AddRoutes")
+          });
+      }else{
+        alert("Empty Fields")
+      }
+    }
+    const getUserName = (value) => {
+      setUserName(value)
+    }
+    const getBusName = (value) => {
+      setBusName(value)
     }
     //firebasse functions
     useEffect(() => {
-      
-    }, [input])
-    const busCollection = firestore().collection('Buses').doc('ABC');
+      const getUser = async() => {
+          const user = await auth().currentUser
+          setUserId(user.uid);
+      }
+      getUser()
+    }, [])
+    console.log(userName,busName,serviceMode);
+    console.log();
+    if(isLoading){
+      return(
+        <LoadingScreen/>
+      )
+    }
     return (
     <View style={{flex:1,backgroundColor:"white",alignItems:'center'}}>
       <View style={styles.logo}>
         <Text>TMBus</Text>
       </View>
       <View style={styles.inputContainer}>
-      <InputField label="Name" password={false} color="black"/>
-      <InputField label="Busname" password={false} color="black"/>
+      <InputField label="Name" password={false} color="black" getText={value=>getUserName(value)}/>
+      <InputField label="Busname" password={false} color="black" getText={value=>getBusName(value)}/>
       <Text>Service Type</Text>
       <View style={styles.optionsContainer}>
             <TouchableOpacity style={option1SelectorStyle} onPress={handleOption1Selection}>
