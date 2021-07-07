@@ -147,9 +147,9 @@ const DriverDetails = ({navigation}) => {
           const driverSet = await AsyncStorage.getItem("DriverSet")
           if(driverSet==="true"){
             navigation.navigate("AddRoutes")
-            setIsLoading(false)
           }
           setUserId(user.uid);
+          setIsLoading(false)
       }
       getUser()
     }, [])

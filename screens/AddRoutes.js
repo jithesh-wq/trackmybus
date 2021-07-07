@@ -5,13 +5,14 @@ import LocationInput from '../components/LocationInput'
 import Button from '../components/Button'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
+
 const AddRoutes = ({navigation}) => {
     const [endingLocation, setEndingLocation] = useState("")
     const [startingLocation, setStartingLocation] = useState("")
     const [routeName, setRouteName] = useState("")
     const [busStops, setBusStops] = useState([])
     const [stopName, setStopName] = useState("")
-    const [clearField, setClearField] = useState(false)
+    const [clearField, setClearField] = useState(0)
     const [user, setUser] = useState("")
     const [stopNo, setStopNo] = useState(1)
     useEffect(() => {
@@ -23,8 +24,9 @@ const AddRoutes = ({navigation}) => {
     const addStop = ()=>{
         console.log("Added stop")
         setBusStops(prevArray => [...prevArray, stopName])
-        setClearField(true)
-        setStopNo(busStops.length)
+        setClearField((prevState)=>prevState+1)
+        setStopNo(busStops.length+2)
+      
 
     }
     const saveRoute = ()=>{
@@ -41,29 +43,33 @@ const AddRoutes = ({navigation}) => {
     }
     console.log(busStops)
     return (
-        <View style={{flex:1,backgroundColor:"white"}}>
+        <View style={{heightbackgroundColor:"red",flex:1}}>
             <View style={styles.logo}>
                 <Text>TMBus</Text>
             </View>
             <View style={styles.inputContainer}>
+
                 <InputField label="Route Name" password={false} color="black"/>
                 <Text style={styles.inputLabel}>Starting  </Text>
                 <LocationInput getText={(value)=>getStartingLocation(value)}/>
                 <Text style={styles.inputLabel}>Ending  </Text>
                 <LocationInput getText={(value)=>getEndingLocation(value)}/>
                 <Text>Add Stops</Text>
-                <Text style={styles.inputLabel}>Stop NO : {stopNo}  </Text>
                 <View style={styles.busStopContainer}>
-                    <LocationInput width="small" getText={(value)=>getStopName(value)} clear={clearField}/>
-                    <TouchableOpacity style={styles.addButton} onPress={addStop}><Text style={{fontSize:20,fontWeight:'bold',color:"white"}}>+</Text></TouchableOpacity>
+                    <Text style={styles.inputLabel}>Stop NO : {stopNo}  </Text>
+                    <LocationInput  getText={(value)=>getStopName(value)} clear={clearField}/>
+
+
+                    {/* <TouchableOpacity style={styles.addButton} onPress={addStop}><Text style={{fontSize:20,fontWeight:'bold',color:"white"}}>+</Text></TouchableOpacity> */}
                 </View>
-                <View >
-                  <Button text="Add Stop" bgcolor="#F76C5E" textcolor="white" press={saveRoute} />
+                <View style={styles.buttonContainer}>
+                  <Button text="Add Stop" bgcolor="#F76C5E" textcolor="white" press={addStop} />
                   <Button text="Save" bgcolor="#F76C5E" textcolor="white" press={saveRoute} />
                 </View>
 
                 
             </View>
+          
         </View>
     )
 }
@@ -98,9 +104,7 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         marginBottom: 10
       },
-      busStopContainer:{
-          flexDirection:'row',
-      },
+      
       addButton:{
           width:30,
           height:30,
@@ -110,5 +114,10 @@ const styles = StyleSheet.create({
           marginLeft:10,
           alignItems:'center',
           justifyContent:'center'
+      },
+      buttonContainer:{
+        width:"100%",
+        flexDirection:'row',
+        justifyContent:'space-around'
       }
 })

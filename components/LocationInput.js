@@ -5,7 +5,9 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 
 const LocationInput = (props) => {
   const [text, setText] = useState()
-
+useEffect(() => {
+ setText("")
+}, [props.clear])
   return (
     <GooglePlacesAutocomplete
       styles={{
