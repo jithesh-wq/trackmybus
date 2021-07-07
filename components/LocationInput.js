@@ -1,9 +1,11 @@
 import { process } from 'babel-jest';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 const LocationInput = (props) => {
+  const [text, setText] = useState()
+
   return (
     <GooglePlacesAutocomplete
       styles={{
@@ -55,11 +57,16 @@ const LocationInput = (props) => {
         }
       }}
       onPress={(data, details = null) => {
-        console.log(data, details);
+        props.getText(data.structured_formatting.main_text)
+      }}
+      textInputProps={{
+        value:text,
+        onChangeText:(value)=>setText(value)
       }}
       query={{
-        key: "AIzaSyApJp32J6Puzjz_JILPDdG2WcQ6gP7fmfw",
+        key: "AIzaSyDc3zfUG3jFh8sfohKUHGkn7O8yTav-KFg",
         language: 'en',
+        components: 'country:in'
       }}
     />
 
@@ -70,3 +77,5 @@ export default LocationInput
 
 const styles = StyleSheet.create({
 })
+
+

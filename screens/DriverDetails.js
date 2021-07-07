@@ -5,6 +5,7 @@ import InputField from '../components/InputField'
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth'
 import LoadingScreen from './LoadingScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 const DriverDetails = ({navigation}) => {
     const [option1Selected, setOption1Selected] = useState(false)
     const [option2Selected, setOption2Selected] = useState(false)
@@ -117,6 +118,7 @@ const DriverDetails = ({navigation}) => {
             setOption1Selected(false)
             setOption2Selected(false)
             setOption3Selected(false)
+            updateStorage()
             setIsLoading(false)
             navigation.navigate("AddRoutes")
           });
@@ -130,10 +132,23 @@ const DriverDetails = ({navigation}) => {
     const getBusName = (value) => {
       setBusName(value)
     }
+    const updateStorage = async() => {
+      try{
+        await AsyncStorage.setItem("DriverSet","true")
+      }catch(e){
+        console.log(e);
+      }
+    }
     //firebasse functions
     useEffect(() => {
       const getUser = async() => {
+          setIsLoading(true)
           const user = await auth().currentUser
+          const driverSet = await AsyncStorage.getItem("DriverSet")
+          if(driverSet==="true"){
+            navigation.navigate("AddRoutes")
+            setIsLoading(false)
+          }
           setUserId(user.uid);
       }
       getUser()
