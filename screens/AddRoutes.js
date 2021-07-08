@@ -7,18 +7,19 @@ import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 
 const AddRoutes = ({navigation}) => {
-    const [endingLocation, setEndingLocation] = useState("")
-    const [startingLocation, setStartingLocation] = useState("")
+    const [endingLocation, setEndingLocation] = useState()
+    const [startingLocation, setStartingLocation] = useState()
     const [routeName, setRouteName] = useState("")
     const [busStops, setBusStops] = useState([])
-    const [stopName, setStopName] = useState("")
+    const [stopName, setStopName] = useState()
     const [clearField, setClearField] = useState(0)
-    const [user, setUser] = useState("")
+    const [userId, setUserId] = useState(null)
     const [stopNo, setStopNo] = useState(1)
+    const [isloading,setIsLoading] = useState(false)
     useEffect(() => {
         const getUid = async() => {
           const currentUser = await auth().currentUser
-          setUser(currentUser.uid)
+          setUserId(currentUser.uid)
         }
     }, []);
     const addStop = ()=>{
@@ -26,20 +27,41 @@ const AddRoutes = ({navigation}) => {
         setBusStops(prevArray => [...prevArray, stopName])
         setClearField((prevState)=>prevState+1)
         setStopNo(busStops.length+2)
-      
-
     }
     const saveRoute = ()=>{
-       navigation.navigate('BusStatus')
+        setIsLoading(true)
+        firestore()
+          .collection('Routes')
+          .doc(userId)
+          .set({
+            routeName:routeName,
+            startingLocation:startingLocation,
+            endingLocation:endingLocation,
+            busStops:busStops
+          })
+          .then(() => {
+            console.log('Data Added!');
+            setEndingLocation("")
+            setStartingLocation("")
+            setIsLoading(false)
+            navigation.navigate('BusStatus')  
+          })
+          .catch((e)=>{
+            console.log(e);
+          });
     }
     const getEndingLocation = (value) => {
       setEndingLocation(value)
     }
     const getStartingLocation = (value) => {
+      console.log("gotLocation",value)
       setStartingLocation(value)
     }
     const getStopName = (value) => {
         setStopName(value)
+    }
+    const getRouteName = (value) => {
+      setRouteName(value)
     }
     console.log(busStops)
     return (
@@ -49,7 +71,7 @@ const AddRoutes = ({navigation}) => {
             </View>
             <View style={styles.inputContainer}>
 
-                <InputField label="Route Name" password={false} color="black"/>
+                <InputField label="Route Name" password={false} color="black" getText={value=>getRouteName(value)}/>
                 <Text style={styles.inputLabel}>Starting  </Text>
                 <LocationInput getText={(value)=>getStartingLocation(value)}/>
                 <Text style={styles.inputLabel}>Ending  </Text>

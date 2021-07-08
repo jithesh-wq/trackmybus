@@ -59,14 +59,16 @@ useEffect(() => {
         }
       }}
       onPress={(data, details = null) => {
-        props.getText(data.structured_formatting.main_text)
+        props.getText(data)
+        console.log(data.structured_formatting.main_text)
+        setText(data.structured_formatting.main_text)
       }}
       textInputProps={{
         value:text,
         onChangeText:(value)=>setText(value)
       }}
       query={{
-        key: "AIzaSyDc3zfUG3jFh8sfohKUHGkn7O8yTav-KFg",
+        key: "AIzaSyDATiEJvwTkCYqtnFK-_cOgJnD5rsfW_c8",
         language: 'en',
         components: 'country:in'
       }}
