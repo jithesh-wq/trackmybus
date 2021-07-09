@@ -20,8 +20,13 @@ const AddRoutes = ({navigation}) => {
     useEffect(() => {
         const getUid = async() => {
           const currentUser = await auth().currentUser
+          const routeSet = await AsyncStorage.getItem("RouteSet")
+          if(routeSet==="true"){
+            navigation.navigate("BusStatus")
+          }
           setUserId(currentUser.uid)
         }
+        getUid()
     }, []);
     const addStop = ()=>{
         console.log("Added stop")
@@ -33,8 +38,9 @@ const AddRoutes = ({navigation}) => {
         setIsLoading(true)
         firestore()
           .collection('Routes')
-          .doc(userId)
+          .doc()
           .set({
+            busId:userId,
             routeName:routeName,
             startingLocation:startingLocation,
             endingLocation:endingLocation,
@@ -44,8 +50,9 @@ const AddRoutes = ({navigation}) => {
             console.log('Data Added!');
             setEndingLocation("")
             setStartingLocation("")
+            updateStorage()
             setIsLoading(false)
-            navigation.navigate('BusStatus')  
+            navigation.navigate('BusStatus')
           })
           .catch((e)=>{
             console.log(e);

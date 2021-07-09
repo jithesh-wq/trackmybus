@@ -1,19 +1,58 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, View,TouchableOpacity } from 'react-native'
+import React, { useState,useEffect } from 'react'
+import { StyleSheet, Text, TextInput, View,TouchableOpacity,Alert,Platform,PermissionsAndroid } from 'react-native'
 import ModalSelector from 'react-native-modal-selector'
 import Button from '../components/Button'
+import firestore from '@react-native-firebase/firestore'
+import auth from '@react-native-firebase/auth'
+import Geolocation from '@react-native-community/geolocation'
+import LoadingScreen from './LoadingScreen'
 const BusStatus = () => {
     const [textInput, setTextInput] = useState("");
     const [isBreakDown, setIsBreakDown] = useState(false)
     const [isInTraffic, setIsInTraffic] = useState(false)
     const [isTripCancelled, setIsTripCancelled] = useState(false)
     const [runningStatus, setRunningStatus] = useState("Stopped")
-    const data = [
-        { key: 0, label: 'Cheruvathur to Cheemeni' },
-        { key: 1, label: 'Cheemeni to Payyanur' },
-        { key: 2, label: 'Payyanur to Cheemeni' },
-        { key: 3, label: 'Cheemeni to Cheruvathur'},
-    ];
+    const [allRoutes, setAllRoutes] = useState([])
+    const [userId, setUserId] = useState()
+    const [currentLocation, setCurrentLocation] = useState()
+    const [isLoading, setisLoading] = useState(false)
+    const [refresh, setRefresh] = useState(0)
+    const hasLocationPermission = async () => {
+   
+    if (Platform.OS === 'android' && Platform.Version < 23) {
+      return true;
+    }
+
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+
+    if (hasPermission) {
+      return true;
+    }
+
+    const status = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+
+    if (status === PermissionsAndroid.RESULTS.GRANTED) {
+      return true;
+    }
+
+    if (status === PermissionsAndroid.RESULTS.DENIED) {
+      ToastAndroid.show(
+        'Location permission denied by user.',
+        ToastAndroid.LONG,
+      );
+    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+      ToastAndroid.show(
+        'Location permission revoked by user.',
+        ToastAndroid.LONG,
+      );
+    }
+
+    return false;
+  };
     const handleBreakDown = () => {
       console.log("breakDown");
       setIsBreakDown(!isBreakDown)
@@ -34,20 +73,121 @@ const BusStatus = () => {
     const handleStop = () => {
       setRunningStatus("Stopped")
     }
+    const handleRouteSelection =async(value) => {
+      setTextInput(value.label)
+     const route= await firestore()
+        .collection('Routes')
+        .doc(value.key)
+        .get();
+      firestore()
+        .collection('Buses')
+        .doc(userId)
+        .update({
+            'currentRoute':route,
+        })
+        .then(() => {
+            console.log('route updated!');
+        });
+    }
+    useEffect(() => {
+        setisLoading(true)
+        setAllRoutes([])
+        const currentUser=auth().currentUser
+        setUserId(currentUser.uid)
+        if(userId){
+            firestore()
+                .collection('Routes')
+                .where('busId','==',userId)
+                .get()
+                .then(querySnapshot => {
+                    setisLoading(false)
+                    console.log('Total routes: ', querySnapshot.size);
+                    querySnapshot.forEach(documentSnapshot => {
+                    setAllRoutes(prevState=>[...prevState,{
+                        key:documentSnapshot.id,
+                        label:documentSnapshot.data().routeName
+                    }])
+                }); 
+            })
+            .catch((e)=>{console.log(e)});
+        }else{
+            console.log('notauthenticated');
+        }
+    }, [refresh])
+    useEffect(() => {
+        getLocation()
+       firestore()
+        .collection('Buses')
+        .doc(userId)
+        .update({
+            'currentStatus':runningStatus,
+            'isBreakDown':isBreakDown,
+            'isInTraffic':isInTraffic,
+            'isRouteCancelled':isTripCancelled
+        })
+        .then(() => {
+            console.log('route updated!');
+        })
+        .catch((e)=>console.log(e));
+    }, [runningStatus,isBreakDown,isInTraffic,isTripCancelled])
+    useEffect(() => {
+       setTimeout(() => {
+           setRefresh(refresh+1)
+       }, 1000);
+    }, [])
+    const getLocation = async () => {
+    const hasPermission = await hasLocationPermission();
+
+    if (!hasPermission) {
+      return;
+    }
+
+    Geolocation.getCurrentPosition(
+      (position) => {
+        setCurrentLocation(position);
+        console.log(position);
+      },
+      (error) => {
+        Alert.alert(`Code ${error.code}`, error.message);
+        setCurrentLocation(null);
+        console.log(error);
+      },
+      {
+        accuracy: {
+          android: 'high',
+        },
+        enableHighAccuracy: false,
+        timeout: 15000,
+        maximumAge: 10000,
+        distanceFilter: 0,
+        forceRequestLocation: true,
+        forceLocationManager: true,
+        showLocationDialog: true,
+      },
+    );
+  };
+    console.log(currentLocation)
+    // setInterval(() => {
+    //     console.log("testn")
+    // }, 5000);
+    if(isLoading && userId){
+        return(<LoadingScreen/>)
+    }
     return (
         <View style={{flex:1,backgroundColor:"white"}}>
             <View style={styles.routeContainer}>
                 <View style={{marginTop:60}}>
                     <Text style={{color:"white",fontSize:15,marginBottom:8,marginLeft:20}}>Route Name</Text>
                     <ModalSelector
-                    data={data}
-                    onChange={(option)=>{ setTextInput(option.label)}}>
+                    data={allRoutes}
+                    onChange={(option)=>{ handleRouteSelection(option)}}>
                         <TextInput 
                             style={styles.inputBox}
                             editable={false}
                             value={textInput}  
                             placeholder="Select a route"
-                            placeholderTextColor="grey"  
+                            placeholderTextColor="grey"
+                            onPress={()=>setRefresh(refresh+1)}
                         />
                     </ModalSelector>
                     <View style={{flexDirection:"row",justifyContent:'space-around'}}>

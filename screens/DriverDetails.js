@@ -105,6 +105,7 @@ const DriverDetails = ({navigation}) => {
             userName: userName,
             busNAme:busName,
             serviceMode:serviceMode,
+            currentRoute:"",
             currentStatus:'Not Running',
             isBreackDown:false,
             isInTraffic:false,
@@ -145,10 +146,6 @@ const DriverDetails = ({navigation}) => {
           setIsLoading(true)
           const user = await auth().currentUser
           const driverSet = await AsyncStorage.getItem("DriverSet")
-          const routeSet = await AsyncStorage.getItem("RouteSet")
-          if(routeSet==="true"){
-            navigation.navigate("BusStatus")
-          }
           if(driverSet==="true"){
             navigation.navigate("AddRoutes")
           }
