@@ -5,6 +5,7 @@ import LocationInput from '../components/LocationInput'
 import Button from '../components/Button'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const AddRoutes = ({navigation}) => {
     const [endingLocation, setEndingLocation] = useState()
@@ -62,6 +63,13 @@ const AddRoutes = ({navigation}) => {
     }
     const getRouteName = (value) => {
       setRouteName(value)
+    }
+    const updateStorage = async() => {
+      try{
+        AsyncStorage.setItem("RouteSet","true")
+      }catch(e){
+        console.log(e);
+      }
     }
     console.log(busStops)
     return (
