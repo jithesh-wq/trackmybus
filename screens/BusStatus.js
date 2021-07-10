@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from 'react'
-import { StyleSheet, Text, TextInput, View,TouchableOpacity,Alert,Platform,PermissionsAndroid } from 'react-native'
+import React, { useState,useEffect,useRef } from 'react'
+import { StyleSheet, Text, TextInput, View,TouchableOpacity,Alert,Platform,PermissionsAndroid, ToastAndroid } from 'react-native'
 import ModalSelector from 'react-native-modal-selector'
 import Button from '../components/Button'
 import firestore from '@react-native-firebase/firestore'
@@ -14,45 +14,58 @@ const BusStatus = () => {
     const [runningStatus, setRunningStatus] = useState("Stopped")
     const [allRoutes, setAllRoutes] = useState([])
     const [userId, setUserId] = useState()
-    const [currentLocation, setCurrentLocation] = useState()
+    const [currentLocation, setCurrentLocation] = useState("")
     const [isLoading, setisLoading] = useState(false)
     const [refresh, setRefresh] = useState(0)
-    const hasLocationPermission = async () => {
-   
-    if (Platform.OS === 'android' && Platform.Version < 23) {
-      return true;
+    const [clearRoute, setClearRoute] = useState(false)
+    const [refreshLocation, setRefreshLocation] = useState(1)
+    const prevLocation = usePrevious(currentLocation);
+    useEffect(() => {
+        const getUserId=async()=>{
+            const user=await auth().currentUser
+            setUserId(user.uid)
+        }
+        return () => {
+            getUserId()
+        }
+    }, [])
+    const getLocation = async () => {                   //get the location using gps
+            Geolocation.watchPosition(
+                (position) => {
+                    setCurrentLocation(position);
+                    console.log(currentLocation);
+                },
+                (error) => {
+                    console.log(`Code ${error.code}`, error.message);
+                    setCurrentLocation(null);
+                    console.log(error);
+                },
+                {
+                    accuracy: {
+                    android: 'high',
+                    },
+                    enableHighAccuracy: true,
+                    timeout: 100,
+                    maximumAge: 100,
+                    distanceFilter: 0,
+                    forceRequestLocation: true,
+                    forceLocationManager: true,
+                    showLocationDialog: true,
+                },
+            );
+    };
+    getLocation()
+    function usePrevious(value) {
+        // The ref object is a generic container whose current property is mutable ...
+        // ... and can hold any value, similar to an instance property on a class
+        const ref = useRef();
+        // Store current value in ref
+        useEffect(() => {
+            ref.current = value;
+        }, [value]); // Only re-run if value changes
+        // Return previous value (happens before update in useEffect above)
+        return ref.current;
     }
-
-    const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-
-    if (hasPermission) {
-      return true;
-    }
-
-    const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-
-    if (status === PermissionsAndroid.RESULTS.GRANTED) {
-      return true;
-    }
-
-    if (status === PermissionsAndroid.RESULTS.DENIED) {
-      ToastAndroid.show(
-        'Location permission denied by user.',
-        ToastAndroid.LONG,
-      );
-    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-      ToastAndroid.show(
-        'Location permission revoked by user.',
-        ToastAndroid.LONG,
-      );
-    }
-
-    return false;
-  };
     const handleBreakDown = () => {
       console.log("breakDown");
       setIsBreakDown(!isBreakDown)
@@ -72,8 +85,9 @@ const BusStatus = () => {
     }
     const handleStop = () => {
       setRunningStatus("Stopped")
+      setClearRoute(true)
     }
-    const handleRouteSelection =async(value) => {
+    const handleRouteSelection =async(value) => {           //set the current route as selected route
       setTextInput(value.label)
      const route= await firestore()
         .collection('Routes')
@@ -89,7 +103,8 @@ const BusStatus = () => {
             console.log('route updated!');
         });
     }
-    useEffect(() => {
+
+    useEffect(() => {                                   //getRoutes related to this bus
         setisLoading(true)
         setAllRoutes([])
         const currentUser=auth().currentUser
@@ -100,7 +115,7 @@ const BusStatus = () => {
                 .where('busId','==',userId)
                 .get()
                 .then(querySnapshot => {
-                    setisLoading(false)
+                
                     console.log('Total routes: ', querySnapshot.size);
                     querySnapshot.forEach(documentSnapshot => {
                     setAllRoutes(prevState=>[...prevState,{
@@ -113,9 +128,10 @@ const BusStatus = () => {
         }else{
             console.log('notauthenticated');
         }
+        setisLoading(false)
     }, [refresh])
-    useEffect(() => {
-        getLocation()
+
+    useEffect(() => {               //update bus status
        firestore()
         .collection('Buses')
         .doc(userId)
@@ -130,49 +146,52 @@ const BusStatus = () => {
         })
         .catch((e)=>console.log(e));
     }, [runningStatus,isBreakDown,isInTraffic,isTripCancelled])
-    useEffect(() => {
+
+ //location getting functions
+
+
+                                                     
+    useEffect(() => {       //timer for refreshing user
        setTimeout(() => {
            setRefresh(refresh+1)
        }, 1000);
     }, [])
-    const getLocation = async () => {
-    const hasPermission = await hasLocationPermission();
 
-    if (!hasPermission) {
-      return;
+    if(clearRoute){ //clear the currentroute from datatbase when ending the trip
+        firestore()
+        .collection('Currentroute')
+        .doc(userId)
+        .update({
+            'currentRoute':"",
+        })
+        .then(() => {
+            console.log('route updated!');
+        });
     }
-
-    Geolocation.getCurrentPosition(
-      (position) => {
-        setCurrentLocation(position);
-        console.log(position);
-      },
-      (error) => {
-        Alert.alert(`Code ${error.code}`, error.message);
-        setCurrentLocation(null);
-        console.log(error);
-      },
-      {
-        accuracy: {
-          android: 'high',
-        },
-        enableHighAccuracy: false,
-        timeout: 15000,
-        maximumAge: 10000,
-        distanceFilter: 0,
-        forceRequestLocation: true,
-        forceLocationManager: true,
-        showLocationDialog: true,
-      },
-    );
-  };
-    console.log(currentLocation)
-    // setInterval(() => {
-    //     console.log("testn")
-    // }, 5000);
+    
+   
+    useEffect(() => {  
+        const updateLocationToDatabase = () => {
+            firestore()
+                .collection('CurrentLocation')
+                .doc(userId)
+                .set({
+                    currentLocation:currentLocation,
+                })
+                .then(() => {
+                    console.log('Location updated!');
+                })
+                .catch((e)=>console.log(e));
+            }
+        userId?updateLocationToDatabase():console.log("not authed")
+    }, [currentLocation])
+    const checkLocationChanges = () => {
+      
+    }
     if(isLoading && userId){
         return(<LoadingScreen/>)
     }
+    console.log(currentLocation)
     return (
         <View style={{flex:1,backgroundColor:"white"}}>
             <View style={styles.routeContainer}>

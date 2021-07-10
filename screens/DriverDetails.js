@@ -105,7 +105,6 @@ const DriverDetails = ({navigation}) => {
             userName: userName,
             busNAme:busName,
             serviceMode:serviceMode,
-            currentRoute:"",
             currentStatus:'Not Running',
             isBreackDown:false,
             isInTraffic:false,
