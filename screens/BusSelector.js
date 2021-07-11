@@ -2,7 +2,9 @@ import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View,Image} from 'react-native'
 import LottieView from 'lottie-react-native';
 
-const BusSelector = ({navigation}) => {
+const BusSelector = ({route,navigation}) => {
+   const {buses} = route.params
+   console.log(buses)
     return (
         <View style={{flex:1,backgroundColor:"white"}}>
             {/* <TouchableWithoutFeedback onPress={()=>{console.log("backPressed")}}  >

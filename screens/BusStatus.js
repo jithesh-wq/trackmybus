@@ -5,6 +5,7 @@ import Button from '../components/Button'
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 import Geolocation from '@react-native-community/geolocation'
+
 import LoadingScreen from './LoadingScreen'
 const BusStatus = () => {
     const [textInput, setTextInput] = useState("");
@@ -18,7 +19,6 @@ const BusStatus = () => {
     const [isLoading, setisLoading] = useState(false)
     const [refresh, setRefresh] = useState(0)
     const [clearRoute, setClearRoute] = useState(false)
-    const [refreshLocation, setRefreshLocation] = useState(1)
     const prevLocation = usePrevious(currentLocation);
     useEffect(() => {
         const getUserId=async()=>{
@@ -31,9 +31,10 @@ const BusStatus = () => {
     }, [])
     const getLocation = async () => {                   //get the location using gps
             Geolocation.watchPosition(
-                (position) => {
+                (position) => { 
+                    console.log("gettingLocation");
                     setCurrentLocation(position);
-                    console.log(currentLocation);
+                    console.log(position)
                 },
                 (error) => {
                     console.log(`Code ${error.code}`, error.message);
@@ -44,18 +45,29 @@ const BusStatus = () => {
                     accuracy: {
                     android: 'high',
                     },
-                    enableHighAccuracy: true,
-                    timeout: 100,
-                    maximumAge: 100,
+                    enableHighAccuracy: false,
+                    timeout: 10000,
+                    maximumAge: 5000,
                     distanceFilter: 0,
                     forceRequestLocation: true,
                     forceLocationManager: true,
                     showLocationDialog: true,
                 },
             );
+            // GetLocation.getCurrentPosition({
+            //         enableHighAccuracy: true,
+            //         timeout: 15000,
+            //         })
+            //         .then(location => {
+            //             console.log(location);
+            //         })
+            //         .catch(error => {
+            //             const { code, message } = error;
+            //             console.warn(code, message);
+            //         })
+            
     };
-    getLocation()
-    function usePrevious(value) {
+    function usePrevious(value) { 
         // The ref object is a generic container whose current property is mutable ...
         // ... and can hold any value, similar to an instance property on a class
         const ref = useRef();
@@ -80,16 +92,19 @@ const BusStatus = () => {
         setRunningStatus("Stopped")
     }
     const handleStart =  () => {
+      getLocation()
       setRunningStatus("Running")
       setIsTripCancelled(false)
+      console.log(currentLocation)
     }
     const handleStop = () => {
+      Geolocation.stopObserving();
       setRunningStatus("Stopped")
       setClearRoute(true)
     }
     const handleRouteSelection =async(value) => {           //set the current route as selected route
-      setTextInput(value.label)
-     const route= await firestore()
+        setTextInput(value.label)
+        const route= await firestore()
         .collection('Routes')
         .doc(value.key)
         .get();
@@ -104,7 +119,9 @@ const BusStatus = () => {
         });
     }
 
-    useEffect(() => {                                   //getRoutes related to this bus
+    useEffect(() => {     
+                                      //getRoutes related to this bus
+       const subscribe = 
         setisLoading(true)
         setAllRoutes([])
         const currentUser=auth().currentUser
@@ -129,10 +146,13 @@ const BusStatus = () => {
             console.log('notauthenticated');
         }
         setisLoading(false)
+        return()=>{
+            subscribe
+        }
     }, [refresh])
 
     useEffect(() => {               //update bus status
-       firestore()
+       const updateBus=firestore()
         .collection('Buses')
         .doc(userId)
         .update({
@@ -145,10 +165,10 @@ const BusStatus = () => {
             console.log('route updated!');
         })
         .catch((e)=>console.log(e));
+        return()=>{
+            updateBus
+        }
     }, [runningStatus,isBreakDown,isInTraffic,isTripCancelled])
-
- //location getting functions
-
 
                                                      
     useEffect(() => {       //timer for refreshing user
@@ -156,7 +176,7 @@ const BusStatus = () => {
            setRefresh(refresh+1)
        }, 1000);
     }, [])
-
+console.log(currentLocation)
     if(clearRoute){ //clear the currentroute from datatbase when ending the trip
         firestore()
         .collection('Currentroute')
@@ -186,8 +206,14 @@ const BusStatus = () => {
         userId?updateLocationToDatabase():console.log("not authed")
     }, [currentLocation])
     const checkLocationChanges = () => {
-      
+    //   if(currentLocation.coords.latitude>(prevLocation.coords.latitude+0.001)||currentLocation.coords.longitude>(prevLocation.coords.longitude+0.001)){
+    //       console.log("locations changes")
+    //   }
+    console.log("checking Location");
     }
+    useEffect(() => {
+        checkLocationChanges()
+    }, [])
     if(isLoading && userId){
         return(<LoadingScreen/>)
     }
