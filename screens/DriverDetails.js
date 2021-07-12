@@ -103,7 +103,7 @@ const DriverDetails = ({navigation}) => {
           .doc(userId)
           .set({
             userName: userName,
-            busNAme:busName,
+            busName:busName,
             serviceMode:serviceMode,
             currentStatus:'Not Running',
             isBreackDown:false,

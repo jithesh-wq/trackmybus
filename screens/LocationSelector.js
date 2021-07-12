@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import LocationInput from '../components/LocationInput';
@@ -11,41 +11,96 @@ const LocationSelector =  ({navigation}) => {
   const [destinationLocation, setDestinationLocation] = useState("");
   const [isLoading, setIsLoading] = useState(false)
   const [matchedBuses, setMatchedBuses] = useState([])
+  const [locations, setLocations] = useState(["Cheruvathur","Chembrakanam"])
+  const [data, setData] = useState([])
+  const [checkBus, setCheckBus] = useState(0)
+  const [counter, setCounter] = useState(0)
+  useEffect(() => {
+ const getData= firestore()
+    .collection('Routes')
+    .get()
+    .then(querySnapshot => {
+      querySnapshot.forEach((documentSnapshot)=>{
+        getAllRoutes(documentSnapshot)
+      })
+     });
+    return ()=>{
+      getData
+    }
+  }, [])
+  // useEffect(() => {
+  //   if(locations.lenght==0){
+  //     ToastAndroid.showWithGravity(
+  //     "Searching for Buses",
+  //     ToastAndroid.SHORT,
+  //     ToastAndroid.CENTER
+  //   );
+  //   }else{
+  //     console.log(matchedBuses);
+  //   }
+  // }, [checkBus])
+  const getAllRoutes =(documentSnapshot) => {
+    console.log(documentSnapshot.data());
+    setData((prev)=>[...prev,{
+          busId:documentSnapshot.data().busId,
+          busStops:documentSnapshot.data().busStops
+        }])
+  }
   const handleNext = ()=>{
-    if(currentLocation!="" && destinationLocation!=""){
-        setIsLoading(true)
-        console.log(matchedBuses);
-        navigation.navigate('BusSelector',{buses:matchedBuses})
+    // setInterval(() => {
+    //   setCheckBus(checkBus+1)
+    // }, 1000);
+      if(locations.length==2){
+        data.forEach((routes)=>{
+          console.log(routes.busId);
+          console.log(locations);
+
+        const route = routes.busStops
+        const checker = locations.every(v => route.includes(v));
+        if(checker){
+          setMatchedBuses((prev)=>[...prev,routes.busId])
+        }
+    })  
+        setTimeout(() => {
+          console.log("matchedBuses =>:   "+matchedBuses);
+        }, 2000);
+        // navigation.navigate('BusSelector',{buses:matchedBuses})
+        handleNavigation()
     }else{
       console.log("fieldEpmty");
     }
+    setCounter(counter+1)
   }
-  const handleFilter = (value) => {
-    console.log(`inside filter:${value}`);
-    setMatchedBuses(prevArray=>[...prevArray,value])
+  const handleNavigation = () => {
+        if(matchedBuses.length<1){
+            console.log("no bus Available");
+            // if(counter<5){
+            //   handleNext()
+            // }
+        }else{
+            navigation.navigate('BusSelector',{buses:matchedBuses})
+        }
+    
   }
-  console.log(matchedBuses)
   const getCurrentLocation = (value) => {
-    setCurrentLocation(value)
+        setLocations([])
+        if(locations.length===0){
+          setLocations((prev)=>[...prev,value])
+        }
   }
   const getDesitnationLocation = (value) => {
-    setDestinationLocation(value)
-    firestore()
-        .collection('Routes')
-        .where('busStops','array-contains' ,currentLocation && destinationLocation)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach((documentSnapshot)=>{
-            const busId = documentSnapshot.data().busId
-            handleFilter(busId)
-          })
-        });
+        if(locations.lenght<2){
+          setLocations((prev)=>[...prev,value])
+        }
   }
   if(isLoading){
     return(
       <LoadingScreen/>
     )
   }
+
+  
+
   return (
     <View style={{flex:1,backgroundColor:"white"}}>
       <View style={styles.logo}>
@@ -59,7 +114,9 @@ const LocationSelector =  ({navigation}) => {
         </Text>
         <LocationInput getText={(value)=>getDesitnationLocation(value)}/>
         <Text style={styles.suggestionText}>Select place from the suggestions</Text>
-        <Button text="Next" bgcolor="#F76C5E" textcolor="white" press={handleNext} />
+        <Text style={styles.suggestionText}>{matchedBuses}</Text>
+
+        <Button text="Next" bgcolor="#F76C5E" textcolor="white" press={()=>handleNext()} />
       </View>
     </View>
   ) 

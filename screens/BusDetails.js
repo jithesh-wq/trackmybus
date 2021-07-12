@@ -1,31 +1,43 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Button from '../components/Button'
-
-const BusDetails = () => {
+import firestore from '@react-native-firebase/firestore'
+const BusDetails = ({route}) => {
     const test =()=>{
         console.log("fullscreen")
+        console.log(route.params.busId);
     }
+    const [bus, setBus] = useState();
+useEffect(() => {
+           firestore()
+           .collection('Buses')
+           .doc(route.params.busId)
+           .get()
+           .then((documentSnapshot)=>{
+               setBus(documentSnapshot.data())
+           })
+   }, [])
+console.log(bus)
     return (
         <View style={{flex:1,backgroundColor:"white"}}>
             <View style={styles.busDetailsContainer}>
                 <View style={styles.busDetails}>
                     <Text style={styles.title}>Bus Details</Text>
                    <View style={styles.textContainer}>
-                        <Text style={styles.status}>Bus Name : </Text>
-                        <Text style={styles.status}>Tee Cee</Text>
+                        <Text style={styles.status}>Bus Name :</Text>
+                        <Text style={styles.status}>{bus.busName} </Text>
                     </View>
                     <View style={styles.textContainer}>
                         <Text style={styles.status}>Running : </Text>
-                        <Text style={styles.status}>Yes</Text>
+                        <Text style={styles.status}>{bus.currentStatus} </Text>
                     </View>
                     <View style={styles.textContainer}>
                         <Text style={styles.status}>Breakdown : </Text>
-                        <Text style={styles.status}>No</Text>
+                        <Text style={styles.status}>{bus.isBreackDown?"No":"Yes"} </Text>
                     </View>
                     <View style={styles.textContainer}>
                         <Text style={styles.status}>In Traffic : </Text>
-                        <Text style={styles.status}>No</Text>
+                        <Text style={styles.status}>{bus.isInTraffic?"Yes":"No"} </Text>
                     </View>
                 </View>
             </View>

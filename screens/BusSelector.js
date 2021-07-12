@@ -1,80 +1,55 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View,Image} from 'react-native'
 import LottieView from 'lottie-react-native';
-
+import firestore from '@react-native-firebase/firestore'
 const BusSelector = ({route,navigation}) => {
+    const [availableBuses, setAvailableBuses] = useState([])
    const {buses} = route.params
-   console.log(buses)
+   console.log(`inside selecotr${buses}`)
+   useEffect(() => {
+       buses.forEach(element => {
+           firestore()
+           .collection('Buses')
+           .doc(element)
+           .get()
+           .then((documentSnapshot)=>{
+               setAvailableBuses(prev=>[...prev,{
+                   busName:documentSnapshot.data().busName,
+                   busId:element,
+                   serviceMode:documentSnapshot.data().serviceMode
+               }])
+           })
+       });
+   }, [])
+
+   const busList =availableBuses.map((value,index)=>{
+       return(
+           <TouchableOpacity
+                key={index}
+                activeOpacity={0.95}
+                style={styles.listOfBuses}
+                onPress={()=>{navigation.navigate("BusDetails",{busId:value.busId})}}>
+                <View style={styles.busContainer}>
+                    <Text style={styles.busTitle}>
+                        {value.busName}    ({value.serviceMode})
+                    </Text>
+                    <Image
+                    style={styles.backButton}
+                     source={require('../assets/icons/forward.png')}
+                />
+                </View>
+            </TouchableOpacity>
+       )
+   })
     return (
         <View style={{flex:1,backgroundColor:"white"}}>
-            {/* <TouchableWithoutFeedback onPress={()=>{console.log("backPressed")}}  >
-                <Image
-                    style={styles.backButton}
-                     source={require('../assets/icons/back.png')}
-                />
-            </TouchableWithoutFeedback> */}
             <View style={styles.titleContainer}>
                 <Text style={styles.title}>
                     Available Buses
                 </Text>
             </View>
-            <View>
-            <TouchableOpacity
-                activeOpacity={0.95}
-                style={styles.listOfBuses}
-                onPress={()=>{navigation.navigate("BusDetails")}}>
-                <View style={styles.busContainer}>
-                    <Text style={styles.busTitle}>
-                        Teecee
-                    </Text>
-                    <Image
-                    style={styles.backButton}
-                     source={require('../assets/icons/forward.png')}
-                />
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-                activeOpacity={0.95}
-                style={styles.listOfBuses}
-                onPress={()=>{console.log("Bus selected")}}>
-                <View style={styles.busContainer}>
-                    <Text style={styles.busTitle}>
-                        YEM YES
-                    </Text>
-                    <Image
-                    style={styles.backButton}
-                     source={require('../assets/icons/forward.png')}
-                />
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-                activeOpacity={0.95}
-                style={styles.listOfBuses}
-                onPress={()=>{console.log("Bus selected")}}>
-                <View style={styles.busContainer}>
-                    <Text style={styles.busTitle}>
-                        Busname3
-                    </Text>
-                    <Image
-                    style={styles.backButton}
-                     source={require('../assets/icons/forward.png')}
-                />
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-                activeOpacity={0.95}
-                style={styles.listOfBuses}
-                onPress={()=>{console.log("Bus selected")}}>
-                <View style={styles.busContainer}>
-                    <Text style={styles.busTitle}>
-                        Busname4
-                    </Text>
-                    <Image
-                    style={styles.backButton}
-                     source={require('../assets/icons/forward.png')}
-                />
-                </View>
-            </TouchableOpacity>
+            <View style={{minHeight:250}}>
+               {busList}
             </View>
                <LottieView style={{position:'relative',width:"100%",marginTop:"10%"}} source={require('../assets/animations/bus.json')} autoPlay loop />
         </View>
@@ -124,3 +99,12 @@ const styles = StyleSheet.create({
         flexDirection:'row'
     }
 })
+
+
+
+
+
+
+
+
+
