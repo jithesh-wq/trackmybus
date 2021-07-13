@@ -5,7 +5,6 @@ import Button from '../components/Button'
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 import Geolocation from '@react-native-community/geolocation'
-
 import LoadingScreen from './LoadingScreen'
 const BusStatus = () => {
     const [textInput, setTextInput] = useState("");

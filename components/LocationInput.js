@@ -1,7 +1,7 @@
 import { process } from 'babel-jest';
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete';
 
 const LocationInput = (props) => {
   const [text, setText] = useState()
@@ -60,7 +60,7 @@ useEffect(() => {
       }}
       onPress={(data, details = null) => {
         props.getText(data.structured_formatting.main_text)
-        console.log(data.structured_formatting.main_text)
+        // console.log(data)
         setText(data.structured_formatting.main_text)
       }}
       textInputProps={{
@@ -68,7 +68,7 @@ useEffect(() => {
         onChangeText:(value)=>setText(value)
       }}
       query={{
-        key: "AIzaSyCFvKWkCICF1ISgj6-AVLrlmu6tL8vM4dw",
+        key: "AIzaSyDsJz7MsspcNal-ZBx08BtJ642zoOP337E",
         language: 'en',
         components: 'country:in'
       }}

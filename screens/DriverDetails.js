@@ -162,9 +162,9 @@ const DriverDetails = ({navigation}) => {
     }
     return (
     <View style={{flex:1,backgroundColor:"white",alignItems:'center'}}>
-      <View style={styles.logo}>
+      {/* <View style={styles.logo}>
         <Text>TMBus</Text>
-      </View>
+      </View> */}
       <View style={styles.inputContainer}>
       <InputField label="Name" password={false} color="black" getText={value=>getUserName(value)}/>
       <InputField label="Busname" password={false} color="black" getText={value=>getBusName(value)}/>
@@ -191,6 +191,7 @@ export default DriverDetails
 const styles = StyleSheet.create({
     inputContainer: {
         alignItems: 'center',
+        marginTop:50 
       },
       inputLabel: {
         fontSize: 15,

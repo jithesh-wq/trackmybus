@@ -16,6 +16,7 @@ import AddRoutes from './screens/AddRoutes';
 import BusStatus from './screens/BusStatus';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from './screens/LoadingScreen';
+import FullScreenMap from './screens/FullScreenMap';
 import auth from '@react-native-firebase/auth';
 
 const Stack = createStackNavigator();
@@ -112,6 +113,9 @@ const App = () => {
           <Stack.Screen name="BusStatus" component={BusStatus} 
           options={{cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           }} />
+          <Stack.Screen name="FullScreenMap" component={FullScreenMap} 
+            options={{cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }} />
         </>
     ):(
       userMode==="passenger"?(
@@ -129,6 +133,9 @@ const App = () => {
             <Stack.Screen name="BusDetails" component={BusDetails}  
             options={{cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             }}/>
+            <Stack.Screen name="FullScreenMap" component={FullScreenMap} 
+            options={{cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }} />
           </>
         ):(
           <>
@@ -139,6 +146,9 @@ const App = () => {
             options={{cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             }} />
             <Stack.Screen name="BusDetails" component={BusDetails} 
+            options={{cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }} />
+            <Stack.Screen name="FullScreenMap" component={FullScreenMap} 
             options={{cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             }} />
           </>

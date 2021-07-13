@@ -21,7 +21,7 @@ const BusSelector = ({route,navigation}) => {
            })
        });
    }, [])
-
+console.log(availableBuses);
    const busList =availableBuses.map((value,index)=>{
        return(
            <TouchableOpacity

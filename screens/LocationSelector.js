@@ -82,16 +82,19 @@ const LocationSelector =  ({navigation}) => {
         }
     
   }
-  const getCurrentLocation = (value) => {
-        setLocations([])
-        if(locations.length===0){
-          setLocations((prev)=>[...prev,value])
-        }
-  }
-  const getDesitnationLocation = (value) => {
-        if(locations.lenght<2){
-          setLocations((prev)=>[...prev,value])
-        }
+  // const getCurrentLocation = (value) => {
+        
+  //         setLocations((prev)=>[...prev,value])
+        
+  // }
+  // const getDesitnationLocation = (value) => {
+      
+  //         setLocations((prev)=>[...prev,value])
+        
+  //       console.log(locations)
+  // }
+  const getLocation = (value)=>{
+    setLocations((prev)=>[...prev,value])
   }
   if(isLoading){
     return(
@@ -103,18 +106,26 @@ const LocationSelector =  ({navigation}) => {
 
   return (
     <View style={{flex:1,backgroundColor:"white"}}>
-      <View style={styles.logo}>
+      {/* <View style={styles.logo}>
         <Text>TMBus</Text>
-      </View>
+      </View> */}
 
       <View style={styles.inputContainer}>
         <Text style={styles.inputLabel}>Current Location</Text>
-        <LocationInput  getText={(value)=>getCurrentLocation(value)}/>
+        <LocationInput  getText={(value)=>getLocation(value)}/>
         <Text style={styles.inputLabel}>Destination
         </Text>
-        <LocationInput getText={(value)=>getDesitnationLocation(value)}/>
+        <LocationInput getText={(value)=>getLocation(value)}/>
         <Text style={styles.suggestionText}>Select place from the suggestions</Text>
-        <Text style={styles.suggestionText}>{matchedBuses}</Text>
+        {/* <Text style={styles.suggestionText}>{matchedBuses}</Text>0
+        
+        
+        
+        
+        
+        
+        
+        */}
 
         <Button text="Next" bgcolor="#F76C5E" textcolor="white" press={()=>handleNext()} />
       </View>
@@ -127,6 +138,7 @@ export default LocationSelector
 const styles = StyleSheet.create({
   inputContainer: {
     alignItems: 'center',
+    marginTop:50
   },
   inputLabel: {
     fontSize: 15,

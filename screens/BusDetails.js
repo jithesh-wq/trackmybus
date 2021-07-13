@@ -2,22 +2,64 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Button from '../components/Button'
 import firestore from '@react-native-firebase/firestore'
-const BusDetails = ({route}) => {
-    const test =()=>{
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import LoadingScreen from './LoadingScreen';
+import busLogo from '../assets/icons/bus.png'
+
+const BusDetails = ({route,navigation}) => {
+    
+    const [latitude, setLatitude] = useState("")
+    const [location, setLocation] = useState({latitude:75,longitude:12})
+    const [isLoading, setIsLoading] = useState(false)
+    const [bus, setBus] = useState({
+                   busName:"loading...",
+                   running:"loading...",
+                   isBreakDown:false,
+                   inTraffic:false
+               });
+    const handleFullScreen =()=>{
         console.log("fullscreen")
         console.log(route.params.busId);
+        navigation.navigate('FullScreenMap',{busId:route.params.busId})
     }
-    const [bus, setBus] = useState();
-useEffect(() => {
-           firestore()
+    console.log(route.params.busID)
+    useEffect(() => {
+    setIsLoading(true)
+    const subscriber = firestore()
            .collection('Buses')
            .doc(route.params.busId)
            .get()
            .then((documentSnapshot)=>{
-               setBus(documentSnapshot.data())
+               console.log(documentSnapshot.data())
+               setBus({
+                   busName:documentSnapshot.data().busName,
+                   currentStatus:documentSnapshot.data().currentStatus,
+                   isBreakDown:documentSnapshot.data().isBreakDown,
+                   inTraffic:documentSnapshot.data().isInTraffic
+               })
            })
+           .then(setIsLoading(false))
+    return () => subscriber;
    }, [])
-console.log(bus)
+   useEffect(() => {
+    const subscriber = firestore()
+      .collection('CurrentLocation')
+      .doc(route.params.busId)
+      .onSnapshot(documentSnapshot => {
+        setLocation({
+            latitude:documentSnapshot.data().currentLocation.coords.latitude,
+            longitude:documentSnapshot.data().currentLocation.coords.longitude
+        })
+      });
+    return () => subscriber;
+  }, []);
+  
+  if(isLoading){
+      return(
+          <LoadingScreen/>
+      )
+  }
+  console.log(location);
     return (
         <View style={{flex:1,backgroundColor:"white"}}>
             <View style={styles.busDetailsContainer}>
@@ -42,9 +84,28 @@ console.log(bus)
                 </View>
             </View>
             <View style={styles.mapContainer}>
-                <Button text="full screen" bgcolor="#F76C5E" textcolor="white" press={test}/>
+                <Button text="full screen" bgcolor="#F76C5E" textcolor="white" press={handleFullScreen}/>
                 <View style={styles.mapView}>
-
+                        <MapView
+                            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                            style={styles.map}
+                            region={{
+                                latitude: 12.22615,
+                                longitude: 75.1977641,
+                                latitudeDelta: 0.015,
+                                longitudeDelta: 0.0121,
+                            }}
+                            >
+                                <Marker
+                                    coordinate={{
+                                        latitude: location.latitude,
+                                        longitude: location.longitude,
+                                        }}
+                                image={busLogo}
+                                   
+                                ></Marker>
+                               
+                        </MapView>
                 </View>
             </View>
         </View>
@@ -94,5 +155,8 @@ const styles = StyleSheet.create({
         borderTopLeftRadius:25,
         borderTopRightRadius:25,
         marginTop:10
-    }
+    },
+    map: {
+   ...StyleSheet.absoluteFillObject,
+ },
 })

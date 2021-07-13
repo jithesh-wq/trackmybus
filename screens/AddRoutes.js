@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, ScrollView,View, TouchableOpacity, BackHandler } from 'react-native'
+import { StyleSheet, Text, ScrollView,View, TouchableOpacity, BackHandler, Image } from 'react-native'
 import InputField from '../components/InputField'
 import LocationInput from '../components/LocationInput'
 import Button from '../components/Button'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import logo from '../assets/images/logo.jpg'
 const AddRoutes = ({navigation}) => {
     const [endingLocation, setEndingLocation] = useState()
     const [startingLocation, setStartingLocation] = useState()
@@ -80,10 +80,10 @@ const AddRoutes = ({navigation}) => {
     }
     console.log(busStops)
     return (
-        <View style={{heightbackgroundColor:"red",flex:1}}>
-            <View style={styles.logo}>
-                <Text>TMBus</Text>
-            </View>
+        <View style={{heightbackgroundColor:"white",flex:1}}>
+            {/* <View style={styles.logo}>
+                <Image style={{width:200,height:100}} source={require('../assets/images/logo.jpg')}/>
+            </View> */}
             <View style={styles.inputContainer}>
 
                 <InputField label="Route Name" password={false} color="black" getText={value=>getRouteName(value)}/>
@@ -116,6 +116,7 @@ export default AddRoutes
 const styles = StyleSheet.create({
     inputContainer: {
         alignItems: 'center',
+        marginTop:50
       },
       inputLabel: {
         fontSize: 15,
