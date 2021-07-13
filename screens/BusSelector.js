@@ -7,6 +7,7 @@ const BusSelector = ({route,navigation}) => {
    const {buses} = route.params
    console.log(`inside selecotr${buses}`)
    useEffect(() => {
+       setAvailableBuses([])
        buses.forEach(element => {
            firestore()
            .collection('Buses')

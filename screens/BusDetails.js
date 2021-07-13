@@ -31,12 +31,7 @@ const BusDetails = ({route,navigation}) => {
            .get()
            .then((documentSnapshot)=>{
                console.log(documentSnapshot.data())
-               setBus({
-                   busName:documentSnapshot.data().busName,
-                   currentStatus:documentSnapshot.data().currentStatus,
-                   isBreakDown:documentSnapshot.data().isBreakDown,
-                   inTraffic:documentSnapshot.data().isInTraffic
-               })
+               getBus(documentSnapshot)
            })
            .then(setIsLoading(false))
     return () => subscriber;
@@ -46,14 +41,25 @@ const BusDetails = ({route,navigation}) => {
       .collection('CurrentLocation')
       .doc(route.params.busId)
       .onSnapshot(documentSnapshot => {
-        setLocation({
-            latitude:documentSnapshot.data().currentLocation.coords.latitude,
-            longitude:documentSnapshot.data().currentLocation.coords.longitude
-        })
+        getLocations(documentSnapshot)
       });
     return () => subscriber;
   }, []);
-  
+  const getLocations = (documentSnapshot) => {
+    setLocation({
+            latitude:documentSnapshot.data().currentLocation.coords.latitude,
+            longitude:documentSnapshot.data().currentLocation.coords.longitude
+        })
+  }
+  const getBus = (documentSnapshot) => {
+    setBus({
+                   busName:documentSnapshot.data().busName,
+                   currentStatus:documentSnapshot.data().currentStatus,
+                   isBreakDown:documentSnapshot.data().isBreakDown,
+                   inTraffic:documentSnapshot.data().isInTraffic
+               })
+  }
+  const 
   if(isLoading){
       return(
           <LoadingScreen/>

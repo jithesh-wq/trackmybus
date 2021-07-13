@@ -11,7 +11,7 @@ const LocationSelector =  ({navigation}) => {
   const [destinationLocation, setDestinationLocation] = useState("");
   const [isLoading, setIsLoading] = useState(false)
   const [matchedBuses, setMatchedBuses] = useState([])
-  const [locations, setLocations] = useState(["Cheruvathur","Chembrakanam"])
+  const [locations, setLocations] = useState([])
   const [data, setData] = useState([])
   const [checkBus, setCheckBus] = useState(0)
   const [counter, setCounter] = useState(0)
@@ -47,19 +47,15 @@ const LocationSelector =  ({navigation}) => {
         }])
   }
   const handleNext = ()=>{
-    // setInterval(() => {
-    //   setCheckBus(checkBus+1)
-    // }, 1000);
       if(locations.length==2){
+        console.log(locations);
         data.forEach((routes)=>{
           console.log(routes.busId);
-          console.log(locations);
-
-        const route = routes.busStops
-        const checker = locations.every(v => route.includes(v));
-        if(checker){
-          setMatchedBuses((prev)=>[...prev,routes.busId])
-        }
+          const route = routes.busStops
+          const checker = locations.every(v => route.includes(v));
+          if(checker){
+            setMatchedBuses((prev)=>[...prev,routes.busId])
+          }
     })  
         setTimeout(() => {
           console.log("matchedBuses =>:   "+matchedBuses);
@@ -95,6 +91,7 @@ const LocationSelector =  ({navigation}) => {
   // }
   const getLocation = (value)=>{
     setLocations((prev)=>[...prev,value])
+    console.log(locations)
   }
   if(isLoading){
     return(
@@ -118,13 +115,6 @@ const LocationSelector =  ({navigation}) => {
         <LocationInput getText={(value)=>getLocation(value)}/>
         <Text style={styles.suggestionText}>Select place from the suggestions</Text>
         {/* <Text style={styles.suggestionText}>{matchedBuses}</Text>0
-        
-        
-        
-        
-        
-        
-        
         */}
 
         <Button text="Next" bgcolor="#F76C5E" textcolor="white" press={()=>handleNext()} />
