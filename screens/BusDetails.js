@@ -13,9 +13,11 @@ const BusDetails = ({route,navigation}) => {
     const [isLoading, setIsLoading] = useState(false)
     const [bus, setBus] = useState({
                    busName:"loading...",
-                   running:"loading...",
-                   isBreakDown:false,
-                   inTraffic:false
+                   currentStatus:"loading...",
+                   isBreackDown:false,
+                   isInTraffic:false,
+                   isRouteCancelled:false,
+                   serviceMode:"Loading..."
                });
     const handleFullScreen =()=>{
         console.log("fullscreen")
@@ -24,19 +26,6 @@ const BusDetails = ({route,navigation}) => {
     }
     console.log(route.params.busID)
     useEffect(() => {
-    setIsLoading(true)
-    const subscriber = firestore()
-           .collection('Buses')
-           .doc(route.params.busId)
-           .get()
-           .then((documentSnapshot)=>{
-               console.log(documentSnapshot.data())
-               getBus(documentSnapshot)
-           })
-           .then(setIsLoading(false))
-    return () => subscriber;
-   }, [])
-   useEffect(() => {
     const subscriber = firestore()
       .collection('CurrentLocation')
       .doc(route.params.busId)
@@ -45,6 +34,17 @@ const BusDetails = ({route,navigation}) => {
       });
     return () => subscriber;
   }, []);
+    useEffect(() => {
+    const subscriber = firestore()
+           .collection('Buses')
+           .doc(route.params.busId)
+           .onSnapshot((documentSnapshot)=>{
+               console.log(documentSnapshot.data())
+               getBus(documentSnapshot)
+           });
+    return () => subscriber;
+   },[])
+   
   const getLocations = (documentSnapshot) => {
     setLocation({
             latitude:documentSnapshot.data().currentLocation.coords.latitude,
@@ -55,11 +55,13 @@ const BusDetails = ({route,navigation}) => {
     setBus({
                    busName:documentSnapshot.data().busName,
                    currentStatus:documentSnapshot.data().currentStatus,
-                   isBreakDown:documentSnapshot.data().isBreakDown,
-                   inTraffic:documentSnapshot.data().isInTraffic
+                   isBreackDown:documentSnapshot.data().isBreackDown,
+                   isInTraffic:documentSnapshot.data().isInTraffic,
+                   serviceMode:documentSnapshot.data().serviceMode,
+
                })
+    console.log("called getbus")
   }
-  const 
   if(isLoading){
       return(
           <LoadingScreen/>
@@ -76,17 +78,22 @@ const BusDetails = ({route,navigation}) => {
                         <Text style={styles.status}>{bus.busName} </Text>
                     </View>
                     <View style={styles.textContainer}>
+                        <Text style={styles.status}>serviceMode : </Text>
+                        <Text style={styles.status}>{bus.serviceMode} </Text>
+                    </View>
+                    <View style={styles.textContainer}>
                         <Text style={styles.status}>Running : </Text>
                         <Text style={styles.status}>{bus.currentStatus} </Text>
                     </View>
                     <View style={styles.textContainer}>
                         <Text style={styles.status}>Breakdown : </Text>
-                        <Text style={styles.status}>{bus.isBreackDown?"No":"Yes"} </Text>
+                        <Text style={styles.status}>{bus.isBreackDown?"Yes":"No"} </Text>
                     </View>
                     <View style={styles.textContainer}>
                         <Text style={styles.status}>In Traffic : </Text>
                         <Text style={styles.status}>{bus.isInTraffic?"Yes":"No"} </Text>
                     </View>
+                    
                 </View>
             </View>
             <View style={styles.mapContainer}>
@@ -96,8 +103,8 @@ const BusDetails = ({route,navigation}) => {
                             provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                             style={styles.map}
                             region={{
-                                latitude: 12.22615,
-                                longitude: 75.1977641,
+                               latitude: location.latitude,
+                                longitude: location.longitude,
                                 latitudeDelta: 0.015,
                                 longitudeDelta: 0.0121,
                             }}
@@ -107,7 +114,6 @@ const BusDetails = ({route,navigation}) => {
                                         latitude: location.latitude,
                                         longitude: location.longitude,
                                         }}
-                                image={busLogo}
                                    
                                 ></Marker>
                                
@@ -147,7 +153,7 @@ const styles = StyleSheet.create({
     },
     textContainer:{
         flexDirection:'row',
-        padding:10
+        padding:8
     },
     status:{
         fontSize:16,

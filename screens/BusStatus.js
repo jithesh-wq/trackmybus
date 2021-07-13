@@ -156,7 +156,7 @@ const BusStatus = () => {
         .doc(userId)
         .update({
             'currentStatus':runningStatus,
-            'isBreakDown':isBreakDown,
+            'isBreackDown':isBreakDown,
             'isInTraffic':isInTraffic,
             'isRouteCancelled':isTripCancelled
         })

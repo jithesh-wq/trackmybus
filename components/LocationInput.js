@@ -68,7 +68,7 @@ useEffect(() => {
         onChangeText:(value)=>setText(value)
       }}
       query={{
-        key: "AIzaSyA1KzKGGu2WdBAYil-UxisOAXlGIQckIZY",
+        key: "AIzaSyDw1SxEayu4kefjY9A3oXRqTeYJGm2cgZc",
         language: 'en',
         components: 'country:in'
       }}
