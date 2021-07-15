@@ -68,7 +68,7 @@ useEffect(() => {
         onChangeText:(value)=>setText(value)
       }}
       query={{
-        key: "AIzaSyDw1SxEayu4kefjY9A3oXRqTeYJGm2cgZc",
+        key: "GOOGLE_PLACE_API",
         language: 'en',
         components: 'country:in'
       }}
